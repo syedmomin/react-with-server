@@ -9,13 +9,13 @@ function App() {
         <div className="shape"></div>
     </div>
     <form>
-        <h3>Type your Server</h3>
+        <h3>Login Your Identity</h3>
 
-        <label>Username</label>
-        <input type="text" placeholder="Email or Phone" id="username" />
+        <label>Username :</label>
+        <input type="text" placeholder="Email" />
 
-        <label>Password</label>
-        <input type="password" placeholder="Password" id="password" />
+        <label>Password :</label>
+        <input type="password" placeholder="Password" />
 
         <button>Log In</button>
     </form>
