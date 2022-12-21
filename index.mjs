@@ -18,6 +18,7 @@ app.get('/abc', (req, res) => {
 //     });
 // })
 app.get('/identity', (req, res) => {
+     console.log("request ip: ", req.ip);
     res.send(
         yourIdentity = {
             email : "syedmomin168@gmail.com",
