@@ -1,14 +1,31 @@
-import express  from "express"
-const app = express()
-const port = 3000  
+import express from 'express';
+import path from 'path';
 
-app.get('/', (req, res) => {
-  console.log("request ip :",req.ip);
-  let getTime = new Date();
-  let nowTime = `hour  ${getTime.getHours()} minute   ${getTime.getMinutes()} second   ${getTime.getSeconds()}`;
-  res.send('Hello User! Now Time is -->'+nowTime)
+const app = express()
+const port = process.env.PORT || 5000;
+
+app.get('/abc', (req, res) => {
+    console.log("request ip: ", req.ip);
+    res.send('Hello World! ' + new Date().toString());
+})
+app.get('/weather', (req, res) => {
+    console.log("request ip: ", req.ip);
+    res.send({
+        temp: 30,
+        humidity: 72,
+        serverTime: new Date().toString()
+    });
+})
+app.get('/time', (req, res) => {
+    console.log("request ip: ", req.ip);
+    res.send('Hello World! ' + new Date().toString());
 })
 
+const __dirname = path.resolve();
+app.use('/', express.static(path.join(__dirname, './web/build')))
+app.use('*', express.static(path.join(__dirname, './web/build')))
+
+
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+    console.log(`Example app listening on port ${port}`)
 })
