@@ -17,15 +17,15 @@ app.get('/abc', (req, res) => {
 //         serverTime: new Date().toString()
 //     });
 // })
-app.get('/identity', (req, res) => {
-    res.send(
-        yourIdentity = {
-            email : "syedmomin168@gmail.com",
-            password : "syedmominkhan",
-            desgnation : "Admin"
-        }
-    );
-})
+// app.get('/identity', (req, res) => {
+//     res.send(
+//         yourIdentity = {
+//             email : "syedmomin168@gmail.com",
+//             password : "syedmominkhan",
+//             desgnation : "Admin"
+//         }
+//     );
+// })
 
 const __dirname = path.resolve();
 app.use('/', express.static(path.join(__dirname, './web/build')))
