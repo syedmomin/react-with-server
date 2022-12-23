@@ -1,14 +1,16 @@
 import express from 'express';
 import path from 'path';
-import { getMaxListeners } from 'process';
+import cors from 'cors';
 
 const app = express()
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3300;
 
-app.get('/abc', (req, res) => {
-    console.log("request ip: ", req.ip);
-    res.send('Hello World! ' + new Date().toString());
-})
+app.use(cors());
+app.use(express.json());
+// app.get('/abc', (req, res) => {
+//     console.log("request ip: ", req.ip);
+//     res.send('Hello World! ' + new Date().toString());
+// })
 // app.get('/weather', (req, res) => {
 //     console.log("request ip: ", req.ip);
 //     res.send({
@@ -17,19 +19,31 @@ app.get('/abc', (req, res) => {
 //         serverTime: new Date().toString()
 //     });
 // })
-// app.get('/identity', (req, res) => {
-//     res.send(
-//         yourIdentity = {
-//             email : "syedmomin168@gmail.com",
-//             password : "syedmominkhan",
-//             desgnation : "Admin"
-//         }
-//     );
-// })
+
+app.get('/login', (req, res) => {
+    const body = req.body;
+
+    console.log("body",body)
+    if ( // validation
+        !body.email
+        || !body.password
+        || !body.token
+    ) {
+        res.status(400).send({
+            message: "required parameters missing",
+        });
+        return;
+    }else{
+        res.send({
+            message: "Happy Login Successfully"
+        });
+    }
+    
+})
 
 const __dirname = path.resolve();
 app.use('/', express.static(path.join(__dirname, './web/build')))
-// app.use('*', express.static(path.join(__dirname, './web/build')))
+app.use('*', express.static(path.join(__dirname, './web/build')))
 
 
 app.listen(port, () => {
