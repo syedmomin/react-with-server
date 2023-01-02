@@ -30,6 +30,7 @@ app.get('/identity', (req, res) => {
 //         serverTime: new Date().toString()
 //     });
 // })
+
 const __dirname = path.resolve();
 app.use('/', express.static(path.join(__dirname, './web/build')))
 app.use('*', express.static(path.join(__dirname, './web/build')))
