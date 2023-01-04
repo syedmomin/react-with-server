@@ -1,35 +1,51 @@
 import express from 'express';
 import path from 'path';
-// import { getMaxListeners } from 'process';
+import cors from 'cors';
 
 const app = express()
-const port = process.env.PORT || 3300;
+const port = process.env.PORT || 5001;
+
+app.use(cors());
+app.use(express.json());
+
+let userDetail = []; // TODO: connect with mongodb instead
+
+
+app.post('/registration', (req, res) => {
+
+    const body = req.body;
+
+    if ( 
+        !body.userName
+        || !body.email
+        || !body.number
+        || !body.password
+    ) {
+        res.status(400).send({
+            message: "required parameters missing",
+        });
+        return;
+    }
+
+    userDetail.push({
+        id: `${new Date().getTime()}`,
+        userName: body.userName,
+        email: body.email,
+        number: body.number,
+        password: body.password
+    });
+
+    res.send({
+        message: "product added successfully"
+    });
+})
+
 
 app.get('/abc', (req, res) => {
     console.log("request ip: ", req.ip);
     res.send('Hello World! ' + new Date().toString());
 })
 
-app.get('/identity', (req, res) => {
-    console.log("request ip: ", req.ip);
-    res.send(
-        {
-            email : "syedmomin168@gmail.com",
-            password : "syedmominkhan",
-            desgnation : "Admin"
-        }
-    );
-})
-
-
-// app.get('/weather', (req, res) => {
-//     console.log("request ip: ", req.ip);
-//     res.send({
-//         temp: 30,
-//         humidity: 72,
-//         serverTime: new Date().toString()
-//     });
-// })
 
 const __dirname = path.resolve();
 app.use('/', express.static(path.join(__dirname, './web/build')))
