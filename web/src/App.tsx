@@ -4,15 +4,23 @@ import './App.css';
 
 function App() {
 
-  // const autoFun = async () => {
-  //   const res = await fetch("https://syedmomin-server.cyclic.app/identity");
-  //   const json = await res.json();
-  //   console.log(json.data);
-  // };
+  const autoFun = async () => {
+    await axios.post(`http://localhost:5001/registration`, {
+      userName: "momin",
+      email: "syedmomin168",
+      number: "0123030",
+      desgnation: "developer"
+    })
+      .then(response => {
+        console.log("response: ", response.data);
+      })
+      .catch(err => {
+        console.log("error: ", err);
+      })
+  };
 
   useEffect(() => {
-    axios.get('http://localhost:3000/identity')
-    .then(response => console.log(response));
+    autoFun()
   }, []);
 
   return (

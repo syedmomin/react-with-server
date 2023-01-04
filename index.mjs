@@ -1,14 +1,14 @@
 import express from 'express';
 import path from 'path';
-// import { getMaxListeners } from 'process';
+import cors from 'cors';
 
 const app = express()
-const port = process.env.PORT || 3300;
+const port = process.env.PORT || 5001;
 
-app.get('/abc', (req, res) => {
-    console.log("request ip: ", req.ip);
-    res.send('Hello World! ' + new Date().toString());
-})
+app.use(cors());
+app.use(express.json());
+
+let userDetail = []; // TODO: connect with mongodb instead
 
 
 app.post('/registration', (req, res) => {
@@ -27,13 +27,23 @@ app.post('/registration', (req, res) => {
         return;
     }
 
-    // products.push({
-    //     id: `${new Date().getTime()}`,
-    //     name: body.name,
-    //     price: body.price,
-    //     description: body.description
-    // });
+    userDetail.push({
+        id: `${new Date().getTime()}`,
+        userName: body.userName,
+        email: body.email,
+        number: body.number,
+        desgnation: body.desgnation
+    });
 
+    res.send({
+        message: "product added successfully"
+    });
+})
+
+
+app.get('/abc', (req, res) => {
+    console.log("request ip: ", req.ip);
+    res.send('Hello World! ' + new Date().toString());
 })
 
 
