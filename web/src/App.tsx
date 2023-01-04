@@ -5,12 +5,16 @@ import './App.css';
 function App() {
 
   const [SignupForm, setSignupForm] = useState(false);
+  const toggleForm = () => {
+    setSignupForm(!SignupForm)
+  }
+
   const autoFun = async () => {
     await axios.post(`http://localhost:5001/registration`, {
       userName: "momin",
       email: "syedmomin168",
       number: "0123030",
-      desgnation: "developer"
+      password: "developer"
     })
       .then(response => {
         console.log("response: ", response.data);
@@ -20,9 +24,8 @@ function App() {
       })
   };
 
-  const changeSignup = () => {
-    setSignupForm(true)
-  }
+ 
+
   useEffect(() => {
     // autoFun()
   }, []);
@@ -44,7 +47,7 @@ function App() {
           <input type="password" placeholder="Password" />
 
           <button>Log In</button>
-          <p onClick={changeSignup}>Create new account?</p>
+          <p onClick={toggleForm}>Create new account?</p>
         </form>
       }
       {SignupForm &&
@@ -60,7 +63,7 @@ function App() {
           <label>Password :</label>
           <input type="password" placeholder="Password" />
           <button>Sgin Up</button>
-          <p onClick={changeSignup}>Create new account?</p>
+          <p onClick={toggleForm}>Create new account?</p>
         </form>
       }
     </>

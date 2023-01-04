@@ -19,7 +19,7 @@ app.post('/registration', (req, res) => {
         !body.userName
         || !body.email
         || !body.number
-        || !body.desgnation
+        || !body.password
     ) {
         res.status(400).send({
             message: "required parameters missing",
@@ -32,7 +32,7 @@ app.post('/registration', (req, res) => {
         userName: body.userName,
         email: body.email,
         number: body.number,
-        desgnation: body.desgnation
+        password: body.password
     });
 
     res.send({
