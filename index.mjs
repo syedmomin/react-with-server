@@ -10,26 +10,33 @@ app.get('/abc', (req, res) => {
     res.send('Hello World! ' + new Date().toString());
 })
 
-app.get('/identity', (req, res) => {
-    console.log("request ip: ", req.ip);
-    res.send(
-        {
-            email : "syedmomin168@gmail.com",
-            password : "syedmominkhan",
-            desgnation : "Admin"
-        }
-    );
+
+app.post('/registration', (req, res) => {
+
+    const body = req.body;
+
+    if ( 
+        !body.userName
+        || !body.email
+        || !body.number
+        || !body.desgnation
+    ) {
+        res.status(400).send({
+            message: "required parameters missing",
+        });
+        return;
+    }
+
+    // products.push({
+    //     id: `${new Date().getTime()}`,
+    //     name: body.name,
+    //     price: body.price,
+    //     description: body.description
+    // });
+
 })
 
 
-// app.get('/weather', (req, res) => {
-//     console.log("request ip: ", req.ip);
-//     res.send({
-//         temp: 30,
-//         humidity: 72,
-//         serverTime: new Date().toString()
-//     });
-// })
 const __dirname = path.resolve();
 app.use('/', express.static(path.join(__dirname, './web/build')))
 app.use('*', express.static(path.join(__dirname, './web/build')))

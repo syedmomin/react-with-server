@@ -1,16 +1,18 @@
 import React, { useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
 
-  const autoFun = async () => {
-    const res = await fetch("http://localhost:3000/identity");
-    // const json = await res.json();
-    console.log(res);
-  };
+  // const autoFun = async () => {
+  //   const res = await fetch("https://syedmomin-server.cyclic.app/identity");
+  //   const json = await res.json();
+  //   console.log(json.data);
+  // };
 
   useEffect(() => {
-    autoFun();
+    axios.get('http://localhost:3000/identity')
+    .then(response => console.log(response));
   }, []);
 
   return (
