@@ -39,7 +39,7 @@ function Login() {
                     .string()
                     .required('User name is required')
                     .min(4, "please enter more then 3 characters ")
-                    .max(15, "please enter within 15 characters "),
+                    .max(25, "please enter within 25 characters "),
 
                 email: yup
                     .string()
@@ -58,8 +58,7 @@ function Login() {
                     .min(8, "please enter more then 8 characters ")
                     .max(25, "please enter within 25 characters "),
             }),
-        onSubmit: (values) => {
-            console.log("get vale", values)
+        onSubmit: (values, { resetForm }) => {
             axios.post(`https://syedmomin-server.cyclic.app/registration`, {
                 userName: values.userName,
                 email: values.email,
@@ -67,6 +66,8 @@ function Login() {
                 password: values.password
             })
                 .then(response => {
+                    resetForm({})
+                    setSignupForm(!SignupForm)
                     console.log("response: ", response.data);
                 })
                 .catch(err => {
