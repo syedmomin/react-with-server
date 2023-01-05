@@ -25,7 +25,7 @@ function Login() {
     //             console.log("error: ", err);
     //         })
     // };
-  
+
     const registerForm = useFormik({
         initialValues: {
             userName: '',
@@ -33,32 +33,32 @@ function Login() {
             number: '',
             password: '',
         },
-        validationSchema: 
-        yup.object({
-            userName: yup
-                .string()
-                .required('User name is required')
-                .min(3, "please enter more then 3 characters ")
-                .max(15, "please enter within 15 characters "),
-    
-            email: yup
-                .string()
-                .required('Email is required'),
-    
-            number: yup
-                .number()
-                .required('Number is required')
-                .min(3, "please enter more then 3 characters ")
-                .max(11, "please enter within 11 characters "),
-    
-            password: yup
-                .string()
-                .required('Password is srequired')
-                .min(8, "please enter more then 8 characters ")
-                .max(25, "please enter within 25 characters "),
-        }),
+        validationSchema:
+            yup.object({
+                userName: yup
+                    .string()
+                    .required('User name is required')
+                    .min(3, "please enter more then 3 characters ")
+                    .max(15, "please enter within 15 characters "),
+
+                email: yup
+                    .string()
+                    .required('Email is required'),
+
+                number: yup
+                    .number()
+                    .required('Number is required')
+                    .min(3, "please enter more then 3 characters ")
+                    .max(11, "please enter within 11 characters "),
+
+                password: yup
+                    .string()
+                    .required('Password is srequired')
+                    .min(8, "please enter more then 8 characters ")
+                    .max(25, "please enter within 25 characters "),
+            }),
         onSubmit: (values) => {
-            console.log("get vale",values)
+            console.log("get vale", values)
         },
     });
     //   useEffect(() => {
@@ -97,6 +97,12 @@ function Login() {
                         value={registerForm.values.userName}
                         onChange={registerForm.handleChange}
                     />
+                    {
+                        (registerForm.touched.userName && Boolean(registerForm.errors.userName)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.userName}</span>
+                            :
+                            null
+                    }
                     <label>Email :</label>
                     <input
                         type="email"
@@ -105,14 +111,26 @@ function Login() {
                         value={registerForm.values.email}
                         onChange={registerForm.handleChange}
                     />
+                    {
+                        (registerForm.touched.email && Boolean(registerForm.errors.email)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.email}</span>
+                            :
+                            null
+                    }
                     <label>Phone :</label>
                     <input
-                        type="number"
+                        type="text"
                         placeholder="Phone"
                         id="number"
                         value={registerForm.values.number}
                         onChange={registerForm.handleChange}
                     />
+                    {
+                        (registerForm.touched.number && Boolean(registerForm.errors.number)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.number}</span>
+                            :
+                            null
+                    }
                     <label>Password :</label>
                     <input
                         type="password"
@@ -121,8 +139,14 @@ function Login() {
                         value={registerForm.values.password}
                         onChange={registerForm.handleChange}
                     />
+                    {
+                        (registerForm.touched.password && Boolean(registerForm.errors.password)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.password}</span>
+                            :
+                            null
+                    }
                     <button type="submit">Sgin Up</button>
-                    <p onClick={toggleForm}>Back to login?</p>
+                    <p onClick={toggleForm}>Already have an account? Sign in instead</p>
                 </form>
             }
         </>
