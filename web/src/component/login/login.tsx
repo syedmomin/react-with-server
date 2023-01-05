@@ -43,13 +43,14 @@ function Login() {
 
                 email: yup
                     .string()
+                    .email()
                     .required('Email is required'),
 
                 number: yup
                     .number()
+                    .positive("A phone number can't start with a minus")
                     .required('Number is required')
-                    .min(3, "please enter more then 3 characters ")
-                    .max(11, "please enter within 11 characters "),
+                    .min(10),
 
                 password: yup
                     .string()
@@ -59,7 +60,7 @@ function Login() {
             }),
         onSubmit: (values) => {
             console.log("get vale", values)
-            axios.post(`http://localhost:5001/registration`, {
+            axios.post(`https://syedmomin-server.cyclic.app/registration`, {
                 userName: values.userName,
                 email: values.email,
                 number: values.number,
