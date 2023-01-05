@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import ResponseModal from '../modal/responseModal';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import './login.css';
 
 function Login() {
-
     const [SignupForm, setSignupForm] = useState(false);
     const toggleForm = () => {
         setSignupForm(!SignupForm)
@@ -59,15 +59,17 @@ function Login() {
                     .max(25, "please enter within 25 characters "),
             }),
         onSubmit: (values, { resetForm }) => {
-            axios.post(`https://syedmomin-server.cyclic.app/registration`, {
+            // axios.post(`https://syedmomin-server.cyclic.app/registration`, {
+            axios.post(`http://localhost:5001/registration`, {
                 userName: values.userName,
                 email: values.email,
                 number: values.number,
                 password: values.password
             })
                 .then(response => {
+                    <ResponseModal modalState="true" status="success" response={response.data.message} />
                     resetForm({})
-                    setSignupForm(!SignupForm)
+                    // setSignupForm(!SignupForm)
                     console.log("response: ", response.data);
                 })
                 .catch(err => {
@@ -81,6 +83,7 @@ function Login() {
 
     return (
         <>
+           <ResponseModal modalState="true" status="success" response="ssdsds" />
             <div className="background">
                 <div className="shape"></div>
                 <div className="shape"></div>

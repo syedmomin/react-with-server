@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { ArrowRight } from 'react-bootstrap-icons';
+import { CheckCircle, XCircle } from 'react-bootstrap-icons';
 
 function ResponseModal(props: any) {
   const [show, setShow] = useState(props.modalState);
@@ -20,8 +20,12 @@ function ResponseModal(props: any) {
         </Modal.Header>
         <Modal.Body>
           <div className='d-flex flex-column align-items-center'>
-            <ArrowRight color="green" size={50} />
-            {props.response}
+            {props.status === "success" ?
+              < CheckCircle color="green" size={60} />
+              :
+              <XCircle color="red" size={60} />
+            }
+            <h3 className={`text-${props.status}`}>{props.response}</h3>
           </div>
         </Modal.Body>
       </Modal>

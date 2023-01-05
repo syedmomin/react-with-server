@@ -18,6 +18,7 @@ let userSchema = new mongoose.Schema({
     userName: { type: String, required: true },
     email: { type: String, required: true },
     number: Number,
+    password:{ type: String, required: true },
     createdOn: { type: Date, default: Date.now }
 });
 const userModel = mongoose.model('userDetail', userSchema);
@@ -57,7 +58,8 @@ app.post('/registration', (req, res) => {
                 console.log(saved);
 
                 res.send({
-                    message: "product added successfully"
+                    status:"success",
+                    message: "User added successfully"
                 });
             } else {
                 res.status(500).send({
@@ -65,9 +67,7 @@ app.post('/registration', (req, res) => {
                 })
             }
         })
-    res.send({
-        message: "User added successfully"
-    });
+
 })
 
 
