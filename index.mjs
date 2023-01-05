@@ -36,7 +36,7 @@ app.post('/registration', (req, res) => {
     });
 
     res.send({
-        message: "product added successfully"
+        message: "User added successfully"
     });
 })
 
