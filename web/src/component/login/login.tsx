@@ -38,7 +38,7 @@ function Login() {
                 userName: yup
                     .string()
                     .required('User name is required')
-                    .min(3, "please enter more then 3 characters ")
+                    .min(4, "please enter more then 3 characters ")
                     .max(15, "please enter within 15 characters "),
 
                 email: yup
@@ -59,6 +59,18 @@ function Login() {
             }),
         onSubmit: (values) => {
             console.log("get vale", values)
+            axios.post(`http://localhost:5001/registration`, {
+                userName: values.userName,
+                email: values.email,
+                number: values.number,
+                password: values.password
+            })
+                .then(response => {
+                    console.log("response: ", response.data);
+                })
+                .catch(err => {
+                    console.log("error: ", err);
+                })
         },
     });
     //   useEffect(() => {
