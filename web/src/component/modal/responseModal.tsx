@@ -25,7 +25,7 @@ function ResponseModal(props: any) {
               :
               <XCircle color="red" size={60} />
             }
-            <h3 className={`text-${props.status}`}>{props.response.toUpperCase()}</h3>
+            <h4 className={`text-${props.status}`}>{props.response.toUpperCase()}</h4>
           </div>
         </Modal.Body>
       </Modal>
