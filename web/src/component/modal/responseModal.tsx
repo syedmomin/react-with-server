@@ -15,9 +15,9 @@ function ResponseModal(props: any) {
       </Button> */}
 
       <Modal show={show}>
-        <Modal.Header closeButton>
+        {/* <Modal.Header closeButton>
           <Modal.Title>{props.status}</Modal.Title>
-        </Modal.Header>
+        </Modal.Header> */}
         <Modal.Body>
           <div className='d-flex flex-column align-items-center'>
             {props.status === "success" ?
@@ -25,7 +25,7 @@ function ResponseModal(props: any) {
               :
               <XCircle color="red" size={60} />
             }
-            <h3 className={`text-${props.status}`}>{props.response}</h3>
+            <h3 className={`text-${props.status}`}>{props.response.toUpperCase()}</h3>
           </div>
         </Modal.Body>
       </Modal>

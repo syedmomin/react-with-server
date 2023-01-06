@@ -7,6 +7,13 @@ import './login.css';
 
 function Login() {
     const [SignupForm, setSignupForm] = useState(false);
+    const [responseModal, setresponseModal] =
+        useState({
+            responseState: false,
+            responseStatus: "",
+            responseMessage: ""
+        });
+
     const toggleForm = () => {
         setSignupForm(!SignupForm)
     }
@@ -67,12 +74,27 @@ function Login() {
                 password: values.password
             })
                 .then(response => {
-                    <ResponseModal modalState="true" status="success" response={response.data.message} />
+                    setresponseModal({
+                        responseState: true,
+                        responseStatus: "success",
+                        responseMessage: response.data.message
+                    })
                     resetForm({})
-                    // setSignupForm(!SignupForm)
-                    console.log("response: ", response.data);
+                    setSignupForm(!SignupForm)
+                    setTimeout(() =>
+                        setresponseModal({
+                        responseState: false,
+                        responseStatus: "",
+                        responseMessage: ""
+                    }),2000)
+                    // console.log("response: ", response.data);
                 })
                 .catch(err => {
+                    setresponseModal({
+                        responseState: true,
+                        responseStatus: "danger",
+                        responseMessage: err
+                    })
                     console.log("error: ", err);
                 })
         },
@@ -83,7 +105,6 @@ function Login() {
 
     return (
         <>
-           <ResponseModal modalState="true" status="success" response="ssdsds" />
             <div className="background">
                 <div className="shape"></div>
                 <div className="shape"></div>
@@ -166,6 +187,10 @@ function Login() {
                     <p onClick={toggleForm}>Already have an account? Sign in instead</p>
                 </form>
             }
+            {responseModal.responseState &&
+                < ResponseModal modalState={responseModal.responseState} status={responseModal.responseStatus} response={responseModal.responseMessage} />
+            }
+
         </>
     );
 }
