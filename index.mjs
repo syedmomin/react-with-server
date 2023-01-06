@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken'
 
 const app = express()
 const port = process.env.PORT || 5001;
@@ -22,6 +23,23 @@ let userSchema = new mongoose.Schema({
     createdOn: { type: Date, default: Date.now }
 });
 const userModel = mongoose.model('userDetail', userSchema);
+
+
+// jwt token  
+function createJWT(user) {
+    // Set the expiration time of the JWT
+    const expiresIn = '1h';
+  
+    // Set the payload of the JWT (the data that will be encoded in the token)
+    const payload = {
+      sub: user._id, // The user's ID
+      iat: Date.now(), // The time the JWT was issued
+    };
+  
+    // Sign the JWT and return it
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
+  }
+  
 
 app.post('/registration', (req, res) => {
 
@@ -70,11 +88,27 @@ app.post('/registration', (req, res) => {
 
 })
 
+app.get('/login', (req, res) => {
+    const { username, password } = req.body;
 
-app.get('/abc', (req, res) => {
-    console.log("request ip: ", req.ip);
-    res.send('Hello World! ' + new Date().toString());
-})
+    if (users[username] && users[username] === password) {
+        const token = createJWT(user);
+      res.send({
+        barerToken:token,
+        message: 'Successfully logged in',
+        user: username
+      });
+    } else {
+      res.status(401).send({
+        message: 'Invalid login credentials'
+      });
+    }
+});
+
+// app.get('/abc', (req, res) => {
+//     console.log("request ip: ", req.ip);
+//     res.send('Hello World! ' + new Date().toString());
+// })
 
 
 const __dirname = path.resolve();
