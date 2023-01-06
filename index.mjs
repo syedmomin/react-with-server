@@ -19,7 +19,7 @@ let userSchema = new mongoose.Schema({
     userName: { type: String, required: true },
     email: { type: String, required: true },
     number: Number,
-    password:{ type: String, required: true },
+    password: { type: String, required: true },
     createdOn: { type: Date, default: Date.now }
 });
 const userModel = mongoose.model('userDetail', userSchema);
@@ -29,17 +29,17 @@ const userModel = mongoose.model('userDetail', userSchema);
 function createJWT(user) {
     // Set the expiration time of the JWT
     const expiresIn = '1h';
-  
+
     // Set the payload of the JWT (the data that will be encoded in the token)
     const payload = {
-      sub: user, // The user's ID
-      iat: Date.now(), // The time the JWT was issued
+        sub: user, // The user's ID
+        iat: Date.now(), // The time the JWT was issued
     };
-  
+
     // Sign the JWT and return it
     return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
-  }
-  
+}
+
 
 app.post('/registration', (req, res) => {
 
@@ -75,7 +75,7 @@ app.post('/registration', (req, res) => {
                 console.log(saved);
 
                 res.send({
-                    status:"success",
+                    status: "success",
                     message: "User added successfully"
                 });
             } else {
@@ -95,15 +95,15 @@ app.get('/login', (req, res) => {
 
     if (true) {
         const token = createJWT(username);
-      res.send({
-        barerToken:token,
-        message: 'Successfully logged in',
-        user: username
-      });
+        res.send({
+            barerToken: token,
+            message: 'Successfully logged in',
+            user: username
+        });
     } else {
-      res.status(401).send({
-        message: 'Invalid login credentials'
-      });
+        res.status(401).send({
+            message: 'Invalid login credentials'
+        });
     }
 });
 
@@ -126,11 +126,25 @@ app.get('/getAllUser', (req, res) => {
     //     res.send(products);
     //   });
 
-  });
+});
 // app.get('/abc', (req, res) => {
 //     console.log("request ip: ", req.ip);
 //     res.send('Hello World! ' + new Date().toString());
 // })
+
+
+
+app.get('/user/:email', (req, res) => {
+    const email = req.params.email;
+    userModel.findOne({ email: email }, (err, user) => {
+        if (user) {
+            res.send({ exists: true });
+        } else {
+            res.send({ exists: false });
+        }
+    });
+});
+
 
 
 const __dirname = path.resolve();

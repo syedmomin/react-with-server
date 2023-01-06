@@ -66,37 +66,45 @@ function Login() {
                     .max(25, "please enter within 25 characters "),
             }),
         onSubmit: (values, { resetForm }) => {
-            // axios.post(`https://syedmomin-server.cyclic.app/registration`, {
-            axios.post(`http://localhost:5001/registration`, {
-                userName: values.userName,
-                email: values.email,
-                number: values.number,
-                password: values.password
-            })
-                .then(response => {
-                    setresponseModal({
-                        responseState: true,
-                        responseStatus: "success",
-                        responseMessage: response.data.message
-                    })
-                    resetForm({})
-                    setSignupForm(!SignupForm)
-                    setTimeout(() =>
+            axios.get(`https://syedmomin-server.cyclic.app/user/${values.email}`)
+                // axios.get(`http://localhost:5001/user/${values.email}`)
+                .then(res => {
+                    console.log(res.data.exists)
+                    if (res.data.exists) {
                         setresponseModal({
-                        responseState: false,
-                        responseStatus: "",
-                        responseMessage: ""
-                    }),2000)
-                    // console.log("response: ", response.data);
-                })
-                .catch(err => {
-                    setresponseModal({
-                        responseState: true,
-                        responseStatus: "danger",
-                        responseMessage: err
-                    })
-                    console.log("error: ", err);
-                })
+                            responseState: true,
+                            responseStatus: "danger",
+                            responseMessage: `this email already exists`
+                        })
+                        // console.log(`User with email ${values.email} exists`);
+                    } else {
+                        axios.post(`https://syedmomin-server.cyclic.app/registration`, {
+                            // axios.post(`http://localhost:5001/registration`, {
+                            userName: values.userName,
+                            email: values.email,
+                            number: values.number,
+                            password: values.password
+                        })
+                            .then(response => {
+                                setresponseModal({
+                                    responseState: true,
+                                    responseStatus: "success",
+                                    responseMessage: response.data.message
+                                })
+                                resetForm({})
+                                setSignupForm(!SignupForm)
+                            })
+                            .catch(err => {
+                                setresponseModal({
+                                    responseState: true,
+                                    responseStatus: "danger",
+                                    responseMessage: err
+                                })
+                                console.log("error: ", err);
+                            })
+                        console.log(`User with email ${values.email} does not exist`);
+                    }
+                });
         },
     });
     //   useEffect(() => {
