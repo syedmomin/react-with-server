@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import ResponseModal from '../modal/responseModal';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import './login.css';
 
 function Login() {
-
     const [SignupForm, setSignupForm] = useState(false);
+    const [responseModal, setresponseModal] =
+        useState({
+            responseState: false,
+            responseStatus: "",
+            responseMessage: ""
+        });
+
     const toggleForm = () => {
         setSignupForm(!SignupForm)
     }
@@ -39,7 +46,7 @@ function Login() {
                     .string()
                     .required('User name is required')
                     .min(4, "please enter more then 3 characters ")
-                    .max(15, "please enter within 15 characters "),
+                    .max(25, "please enter within 25 characters "),
 
                 email: yup
                     .string()
@@ -58,18 +65,36 @@ function Login() {
                     .min(8, "please enter more then 8 characters ")
                     .max(25, "please enter within 25 characters "),
             }),
-        onSubmit: (values) => {
-            console.log("get vale", values)
-            axios.post(`https://syedmomin-server.cyclic.app/registration`, {
+        onSubmit: (values, { resetForm }) => {
+            // axios.post(`https://syedmomin-server.cyclic.app/registration`, {
+            axios.post(`http://localhost:5001/registration`, {
                 userName: values.userName,
                 email: values.email,
                 number: values.number,
                 password: values.password
             })
                 .then(response => {
-                    console.log("response: ", response.data);
+                    setresponseModal({
+                        responseState: true,
+                        responseStatus: "success",
+                        responseMessage: response.data.message
+                    })
+                    resetForm({})
+                    setSignupForm(!SignupForm)
+                    setTimeout(() =>
+                        setresponseModal({
+                        responseState: false,
+                        responseStatus: "",
+                        responseMessage: ""
+                    }),2000)
+                    // console.log("response: ", response.data);
                 })
                 .catch(err => {
+                    setresponseModal({
+                        responseState: true,
+                        responseStatus: "danger",
+                        responseMessage: err
+                    })
                     console.log("error: ", err);
                 })
         },
@@ -162,6 +187,10 @@ function Login() {
                     <p onClick={toggleForm}>Already have an account? Sign in instead</p>
                 </form>
             }
+            {responseModal.responseState &&
+                < ResponseModal modalState={responseModal.responseState} status={responseModal.responseStatus} response={responseModal.responseMessage} />
+            }
+
         </>
     );
 }

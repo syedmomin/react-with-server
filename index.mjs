@@ -2,6 +2,8 @@ import express from 'express';
 import path from 'path';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken'
+import './model/login/login.mjs'
 
 const app = express()
 const port = process.env.PORT || 5001;
@@ -14,13 +16,30 @@ const mongodbURI = process.env.mongodbURI || "mongodb+srv://syedMominTesting:mom
 mongoose.connect(mongodbURI);
 
 let userSchema = new mongoose.Schema({
-    id: { type: Number, required: true },
     userName: { type: String, required: true },
     email: { type: String, required: true },
     number: Number,
+    password:{ type: String, required: true },
     createdOn: { type: Date, default: Date.now }
 });
 const userModel = mongoose.model('userDetail', userSchema);
+
+
+// jwt token  
+function createJWT(user) {
+    // Set the expiration time of the JWT
+    const expiresIn = '1h';
+  
+    // Set the payload of the JWT (the data that will be encoded in the token)
+    const payload = {
+      sub: user, // The user's ID
+      iat: Date.now(), // The time the JWT was issued
+    };
+  
+    // Sign the JWT and return it
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
+  }
+  
 
 app.post('/registration', (req, res) => {
 
@@ -46,7 +65,6 @@ app.post('/registration', (req, res) => {
     //     password: body.password
     // });
     userModel.create({
-        id: `${new Date().getTime()}`,
         userName: body.userName,
         email: body.email,
         number: body.number,
@@ -57,7 +75,8 @@ app.post('/registration', (req, res) => {
                 console.log(saved);
 
                 res.send({
-                    message: "product added successfully"
+                    status:"success",
+                    message: "User added successfully"
                 });
             } else {
                 res.status(500).send({
@@ -65,16 +84,53 @@ app.post('/registration', (req, res) => {
                 })
             }
         })
-    res.send({
-        message: "User added successfully"
+
+})
+
+app.get('/login', (req, res) => {
+    // res.status(401).send({
+    //     message: 'Invalid login credentials'
+    //   });
+    const { username, password } = req.body;
+
+    if (true) {
+        const token = createJWT(username);
+      res.send({
+        barerToken:token,
+        message: 'Successfully logged in',
+        user: username
+      });
+    } else {
+      res.status(401).send({
+        message: 'Invalid login credentials'
+      });
+    }
+});
+
+
+// get all user data in mangodb 
+app.get('/getAllUser', (req, res) => {
+    userModel.find({}, (err, data) => {
+        if (!err) {
+            res.send({
+                message: "get all products successfully",
+                data: data
+            })
+        } else {
+            res.status(500).send({
+                message: "server error"
+            })
+        }
     });
-})
+    // userModel.find().toArray((err, products) => {
+    //     res.send(products);
+    //   });
 
-
-app.get('/abc', (req, res) => {
-    console.log("request ip: ", req.ip);
-    res.send('Hello World! ' + new Date().toString());
-})
+  });
+// app.get('/abc', (req, res) => {
+//     console.log("request ip: ", req.ip);
+//     res.send('Hello World! ' + new Date().toString());
+// })
 
 
 const __dirname = path.resolve();
