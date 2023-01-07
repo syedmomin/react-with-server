@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ResponseModal from '../modal/responseModal';
-import { useFormik } from 'formik';
+import { useFormik, Formik, Field, Form, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
 import './login.css';
@@ -13,25 +13,19 @@ function Login() {
             responseStatus: "",
             responseMessage: ""
         });
+    if (responseModal.responseState) {
+        setTimeout(() => {
+            setresponseModal({
+                responseState: false,
+                responseStatus: "",
+                responseMessage: ""
+            });
+        }, 1500)
+    }
 
     const toggleForm = () => {
         setSignupForm(!SignupForm)
     }
-
-    // const autoFun = async () => {
-    //     await axios.post(`http://localhost:5001/registration`, {
-    //         userName: "momin",
-    //         email: "syedmomin168",
-    //         number: "0123030",
-    //         password: "developer"
-    //     })
-    //         .then(response => {
-    //             console.log("response: ", response.data);
-    //         })
-    //         .catch(err => {
-    //             console.log("error: ", err);
-    //         })
-    // };
 
     const registerForm = useFormik({
         initialValues: {
@@ -61,7 +55,7 @@ function Login() {
 
                 password: yup
                     .string()
-                    .required('Password is srequired')
+                    .required('Password is required')
                     .min(8, "please enter more then 8 characters ")
                     .max(25, "please enter within 25 characters "),
             }),
@@ -98,7 +92,7 @@ function Login() {
                                 setresponseModal({
                                     responseState: true,
                                     responseStatus: "danger",
-                                    responseMessage: err
+                                    responseMessage: err.response.data
                                 })
                                 console.log("error: ", err);
                             })
@@ -107,9 +101,6 @@ function Login() {
                 });
         },
     });
-    //   useEffect(() => {
-    //         // autoFun()
-    //     }, []);
 
     return (
         <>
@@ -118,22 +109,71 @@ function Login() {
                 <div className="shape"></div>
             </div>
             {!SignupForm &&
-                <form>
-                    <h3>Login DanySAM</h3>
+                <Formik
+                    initialValues={{ email: '', password: '' }}
+                    validationSchema={yup.object().shape({
+                        email: yup.string().email().required('Email is required'),
+                        password: yup.string().required('Password is required'),
+                    })}
+                    onSubmit={(values, { setSubmitting, resetForm }) => {
+                        axios.post(`https://syedmomin-server.cyclic.app/login`, {
+                        // axios.post(`http://localhost:5001/login`, {
+                            
+                            email: values.email,
+                            password: values.password
+                        })
+                            .then(response => {
+                                console.log(response.data)
+                                setresponseModal({
+                                    responseState: true,
+                                    responseStatus: "success",
+                                    responseMessage: response.data.message
+                                })
+                                resetForm();
+                            })
+                            .catch(err => {
+                                setresponseModal({
+                                    responseState: true,
+                                    responseStatus: "danger",
+                                    responseMessage: err.response.data.error
+                                })
+                                // console.log("sdsds", err.response.data.error)
+                            })
+                        setSubmitting(false);
+                        console.log("dffdf", values)
+                        // Send a request to your API with the form values
+                    }}
+                >
+                    {({ isSubmitting }) => (
+                        <Form>
+                            <h3>Login - DanySAM</h3>
+                            <label htmlFor="username">Username:</label>
+                            <Field
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                            />
+                            <ErrorMessage name="email" className='text-danger' component="div" />
 
-                    <label>Username :</label>
-                    <input type="text" placeholder="Email" />
+                            <label htmlFor="password">Password:</label>
+                            <Field
+                                type="password"
+                                name="password"
+                                placeholder="password" />
+                            <ErrorMessage name="password" className='text-danger' component="div" />
 
-                    <label>Password :</label>
-                    <input type="password" placeholder="Password" />
+                            <button type="submit" disabled={isSubmitting}>
+                                Login
+                            </button>
+                            <p onClick={toggleForm}>Create new account?</p>
+                        </Form>
+                    )}
+                </Formik>
 
-                    <button>Log In</button>
-                    <p onClick={toggleForm}>Create new account?</p>
-                </form>
             }
             {SignupForm &&
                 <form onSubmit={registerForm.handleSubmit}>
-                    <h3>Registration DanySAM</h3>
+                    <h3>Registration - DanySAM</h3>
 
                     <label>Username :</label>
                     <input
