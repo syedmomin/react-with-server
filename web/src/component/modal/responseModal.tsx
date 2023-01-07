@@ -18,7 +18,7 @@ function ResponseModal(props: any) {
             {props.status === "success" ?
               <CheckCircle color="white" size={60} />
               :
-              <XCircle color="white8+*-ll909" size={60} />
+              <XCircle color="white" size={60} />
             }
             <h4 className={`text-white`}>{props.response.toUpperCase()}</h4>
           </div>

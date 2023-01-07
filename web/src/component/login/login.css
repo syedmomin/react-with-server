@@ -89,7 +89,8 @@ button{
 }
 
 button:hover{
-    font-size: 20px;
+    font-size: 22px;
+    padding: 10px 0;
     /* background-image: linear-gradient(to right,#285cd4d8, #f5a534cb);  / */
 }
 p{
