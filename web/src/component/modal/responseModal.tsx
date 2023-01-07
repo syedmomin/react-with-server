@@ -4,11 +4,6 @@ import { CheckCircle, XCircle } from 'react-bootstrap-icons';
 
 function ResponseModal(props: any) {
   const [show, setShow] = useState(props.modalState);
-  if (props.modalState) {
-    setTimeout(() => {
-      setShow(false)
-    }, 1500)
-  }
 
   return (
     <>

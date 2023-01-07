@@ -13,6 +13,15 @@ function Login() {
             responseStatus: "",
             responseMessage: ""
         });
+    if (responseModal.responseState) {
+        setTimeout(() => {
+            setresponseModal({
+                responseState: false,
+                responseStatus: "",
+                responseMessage: ""
+            });
+        }, 1500)
+    }
 
     const toggleForm = () => {
         setSignupForm(!SignupForm)
@@ -52,7 +61,7 @@ function Login() {
             }),
         onSubmit: (values, { resetForm }) => {
             axios.get(`https://syedmomin-server.cyclic.app/user/${values.email}`)
-            // axios.get(`http://localhost:5001/user/${values.email}`)
+                // axios.get(`http://localhost:5001/user/${values.email}`)
                 .then(res => {
                     console.log(res.data.exists)
                     if (res.data.exists) {
@@ -64,7 +73,7 @@ function Login() {
                         // console.log(`User with email ${values.email} exists`);
                     } else {
                         axios.post(`https://syedmomin-server.cyclic.app/registration`, {
-                        // axios.post(`http://localhost:5001/registration`, {
+                            // axios.post(`http://localhost:5001/registration`, {
                             userName: values.userName,
                             email: values.email,
                             number: values.number,
@@ -83,7 +92,7 @@ function Login() {
                                 setresponseModal({
                                     responseState: true,
                                     responseStatus: "danger",
-                                    responseMessage: err
+                                    responseMessage: err.response.data
                                 })
                                 console.log("error: ", err);
                             })
@@ -100,114 +109,138 @@ function Login() {
                 <div className="shape"></div>
             </div>
             {!SignupForm &&
-            <Formik
-                initialValues={{ email: '', password: '' }}
-                validationSchema={yup.object().shape({
-                    email: yup.string().email().required('Email is required'),
-                    password: yup.string().required('Password is required'),
-                  })}
-                onSubmit={(values, { setSubmitting }) => {
-                    console.log("dffdf", values)
-                    // Send a request to your API with the form values
-                }}
-            >
-                {({ isSubmitting }) => (
-                    <Form>
-                        <h3>Login - DanySAM</h3>
-                        <label htmlFor="username">Username:</label>
-                        <Field
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                        />
-                        <ErrorMessage name="email" className='text-danger' component="div" />
+                <Formik
+                    initialValues={{ email: '', password: '' }}
+                    validationSchema={yup.object().shape({
+                        email: yup.string().email().required('Email is required'),
+                        password: yup.string().required('Password is required'),
+                    })}
+                    onSubmit={(values, { setSubmitting, resetForm }) => {
+                        axios.post(`https://syedmomin-server.cyclic.app/login`, {
+                        // axios.post(`http://localhost:5001/login`, {
+                            
+                            email: values.email,
+                            password: values.password
+                        })
+                            .then(response => {
+                                console.log(response.data)
+                                setresponseModal({
+                                    responseState: true,
+                                    responseStatus: "success",
+                                    responseMessage: response.data.message
+                                })
+                                resetForm();
+                            })
+                            .catch(err => {
+                                setresponseModal({
+                                    responseState: true,
+                                    responseStatus: "danger",
+                                    responseMessage: err.response.data.error
+                                })
+                                // console.log("sdsds", err.response.data.error)
+                            })
+                        setSubmitting(false);
+                        console.log("dffdf", values)
+                        // Send a request to your API with the form values
+                    }}
+                >
+                    {({ isSubmitting }) => (
+                        <Form>
+                            <h3>Login - DanySAM</h3>
+                            <label htmlFor="username">Username:</label>
+                            <Field
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                            />
+                            <ErrorMessage name="email" className='text-danger' component="div" />
 
-                        <label htmlFor="password">Password:</label>
-                        <Field
-                            type="password"
-                            name="password"
-                            placeholder="password" />
-                        <ErrorMessage name="password" className='text-danger' component="div" />
+                            <label htmlFor="password">Password:</label>
+                            <Field
+                                type="password"
+                                name="password"
+                                placeholder="password" />
+                            <ErrorMessage name="password" className='text-danger' component="div" />
 
-                        <button type="submit" disabled={isSubmitting}>
-                            Login
-                        </button>
-                        <p onClick={toggleForm}>Create new account?</p>
-                    </Form>
-                )}
-            </Formik>
+                            <button type="submit" disabled={isSubmitting}>
+                                Login
+                            </button>
+                            <p onClick={toggleForm}>Create new account?</p>
+                        </Form>
+                    )}
+                </Formik>
 
             }
-                {SignupForm &&
-                    <form onSubmit={registerForm.handleSubmit}>
-                        <h3>Registration - DanySAM</h3>
+            {SignupForm &&
+                <form onSubmit={registerForm.handleSubmit}>
+                    <h3>Registration - DanySAM</h3>
 
-                        <label>Username :</label>
-                        <input
-                            type="text"
-                            placeholder="Enter your full name"
-                            id="userName"
-                            value={registerForm.values.userName}
-                            onChange={registerForm.handleChange}
-                        />
-                        {
-                            (registerForm.touched.userName && Boolean(registerForm.errors.userName)) ?
-                                <span style={{ color: "red" }}>{registerForm.errors.userName}</span>
-                                :
-                                null
-                        }
-                        <label>Email :</label>
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            id="email"
-                            value={registerForm.values.email}
-                            onChange={registerForm.handleChange}
-                        />
-                        {
-                            (registerForm.touched.email && Boolean(registerForm.errors.email)) ?
-                                <span style={{ color: "red" }}>{registerForm.errors.email}</span>
-                                :
-                                null
-                        }
-                        <label>Phone :</label>
-                        <input
-                            type="text"
-                            placeholder="Phone"
-                            id="number"
-                            value={registerForm.values.number}
-                            onChange={registerForm.handleChange}
-                        />
-                        {
-                            (registerForm.touched.number && Boolean(registerForm.errors.number)) ?
-                                <span style={{ color: "red" }}>{registerForm.errors.number}</span>
-                                :
-                                null
-                        }
-                        <label>Password :</label>
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            id="password"
-                            value={registerForm.values.password}
-                            onChange={registerForm.handleChange}
-                        />
-                        {
-                            (registerForm.touched.password && Boolean(registerForm.errors.password)) ?
-                                <span style={{ color: "red" }}>{registerForm.errors.password}</span>
-                                :
-                                null
-                        }
-                        <button type="submit">Sgin Up</button>
-                        <p onClick={toggleForm}>Already have an account? Sign in instead</p>
-                    </form>
-                }
-                {responseModal.responseState &&
-                    < ResponseModal modalState={responseModal.responseState} status={responseModal.responseStatus} response={responseModal.responseMessage} />
-                }
+                    <label>Username :</label>
+                    <input
+                        type="text"
+                        placeholder="Enter your full name"
+                        id="userName"
+                        value={registerForm.values.userName}
+                        onChange={registerForm.handleChange}
+                    />
+                    {
+                        (registerForm.touched.userName && Boolean(registerForm.errors.userName)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.userName}</span>
+                            :
+                            null
+                    }
+                    <label>Email :</label>
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        id="email"
+                        value={registerForm.values.email}
+                        onChange={registerForm.handleChange}
+                    />
+                    {
+                        (registerForm.touched.email && Boolean(registerForm.errors.email)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.email}</span>
+                            :
+                            null
+                    }
+                    <label>Phone :</label>
+                    <input
+                        type="text"
+                        placeholder="Phone"
+                        id="number"
+                        value={registerForm.values.number}
+                        onChange={registerForm.handleChange}
+                    />
+                    {
+                        (registerForm.touched.number && Boolean(registerForm.errors.number)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.number}</span>
+                            :
+                            null
+                    }
+                    <label>Password :</label>
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        id="password"
+                        value={registerForm.values.password}
+                        onChange={registerForm.handleChange}
+                    />
+                    {
+                        (registerForm.touched.password && Boolean(registerForm.errors.password)) ?
+                            <span style={{ color: "red" }}>{registerForm.errors.password}</span>
+                            :
+                            null
+                    }
+                    <button type="submit">Sgin Up</button>
+                    <p onClick={toggleForm}>Already have an account? Sign in instead</p>
+                </form>
+            }
+            {responseModal.responseState &&
+                < ResponseModal modalState={responseModal.responseState} status={responseModal.responseStatus} response={responseModal.responseMessage} />
+            }
 
-            </>
-            );
+        </>
+    );
 }
 
-            export default Login;
+export default Login;

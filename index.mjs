@@ -120,7 +120,10 @@ app.post('/login', (req, res) => {
         // Generate a JSON Web Token and send it back to the client
         //   const token = jwt.sign({ id: user.id }, JWT_SECRET);
         //   res.json({ token });
-          res.send("success");
+        res.send({
+            status: "success",
+            message: `welcome ${username} to dashboard`
+        });
     });
 });
 
