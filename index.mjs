@@ -16,11 +16,27 @@ const mongodbURI = process.env.mongodbURI || "mongodb+srv://syedMominTesting:mom
 mongoose.connect(mongodbURI);
 
 let userSchema = new mongoose.Schema({
-    userName: { type: String, required: true },
-    email: { type: String, required: true },
+    userName: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
     number: Number,
-    password: { type: String, required: true },
-    createdOn: { type: Date, default: Date.now }
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        default: "customer"
+    },
+    createdOn: {
+        type: Date,
+        default: Date.now
+    }
 });
 const userModel = mongoose.model('userDetail', userSchema);
 
@@ -37,19 +53,21 @@ function createJWT(user) {
     };
 
     // Sign the JWT and return it
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
+    return jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn
+    });
 }
 
-
+// user registration  
 app.post('/registration', (req, res) => {
 
     const body = req.body;
 
     if (
-        !body.userName
-        || !body.email
-        || !body.number
-        || !body.password
+        !body.userName ||
+        !body.email ||
+        !body.number ||
+        !body.password
     ) {
         res.status(400).send({
             message: "required parameters missing",
@@ -57,26 +75,20 @@ app.post('/registration', (req, res) => {
         return;
     }
 
-    // userDetail.push({
-    //     id: `${new Date().getTime()}`,
-    //     userName: body.userName,
-    //     email: body.email,
-    //     number: body.number,
-    //     password: body.password
-    // });
     userModel.create({
-        userName: body.userName,
-        email: body.email,
-        number: body.number,
-        password: body.password
-    },
+            userName: body.userName,
+            email: body.email,
+            number: body.number,
+            role: body.role,
+            password: body.password
+        },
         (err, saved) => {
             if (!err) {
                 console.log(saved);
 
                 res.send({
                     status: "success",
-                    message: "User added successfully"
+                    message: "User register successfully"
                 });
             } else {
                 res.status(500).send({
@@ -87,25 +99,31 @@ app.post('/registration', (req, res) => {
 
 })
 
-app.get('/login', (req, res) => {
-    // res.status(401).send({
-    //     message: 'Invalid login credentials'
-    //   });
-    const { username, password } = req.body;
+// login user api 
+app.post('/login', (req, res) => {
+    const {
+        username,
+        password
+    } = req.body;
 
-    if (true) {
-        const token = createJWT(username);
-        res.send({
-            barerToken: token,
-            message: 'Successfully logged in',
-            user: username
-        });
-    } else {
-        res.status(401).send({
-            message: 'Invalid login credentials'
-        });
-    }
+    // Query the database to check if the provided username and password are valid
+    userModel.findOne({
+        username,
+        password
+    }, (err, user) => {
+        if (err || !user) {
+            return res.status(401).send({
+                error: 'Invalid credentials'
+            });
+        }
+
+        // Generate a JSON Web Token and send it back to the client
+        //   const token = jwt.sign({ id: user.id }, JWT_SECRET);
+        //   res.json({ token });
+          res.send("success");
+    });
 });
+
 
 
 // get all user data in mangodb 
@@ -113,7 +131,7 @@ app.get('/getAllUser', (req, res) => {
     userModel.find({}, (err, data) => {
         if (!err) {
             res.send({
-                message: "get all products successfully",
+                message: "get all user successfully",
                 data: data
             })
         } else {
@@ -122,9 +140,6 @@ app.get('/getAllUser', (req, res) => {
             })
         }
     });
-    // userModel.find().toArray((err, products) => {
-    //     res.send(products);
-    //   });
 
 });
 // app.get('/abc', (req, res) => {
@@ -136,11 +151,17 @@ app.get('/getAllUser', (req, res) => {
 
 app.get('/user/:email', (req, res) => {
     const email = req.params.email;
-    userModel.findOne({ email: email }, (err, user) => {
+    userModel.findOne({
+        email: email
+    }, (err, user) => {
         if (user) {
-            res.send({ exists: true });
+            res.send({
+                exists: true
+            });
         } else {
-            res.send({ exists: false });
+            res.send({
+                exists: false
+            });
         }
     });
 });
@@ -158,21 +179,21 @@ app.listen(port, () => {
 
 
 ////////////////mongodb connected disconnected events///////////////////////////////////////////////
-mongoose.connection.on('connected', function () {//connected
+mongoose.connection.on('connected', function () { //connected
     console.log("Mongoose is connected");
 });
 
-mongoose.connection.on('disconnected', function () {//disconnected
+mongoose.connection.on('disconnected', function () { //disconnected
     console.log("Mongoose is disconnected");
     process.exit(1);
 });
 
-mongoose.connection.on('error', function (err) {//any error
+mongoose.connection.on('error', function (err) { //any error
     console.log('Mongoose connection error: ', err);
     process.exit(1);
 });
 
-process.on('SIGINT', function () {/////this function will run jst before app is closing
+process.on('SIGINT', function () { /////this function will run jst before app is closing
     console.log("app is terminating");
     mongoose.connection.close(function () {
         console.log('Mongoose default connection closed');

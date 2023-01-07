@@ -61,13 +61,13 @@ function Login() {
 
                 password: yup
                     .string()
-                    .required('Password is srequired')
+                    .required('Password is required')
                     .min(8, "please enter more then 8 characters ")
                     .max(25, "please enter within 25 characters "),
             }),
         onSubmit: (values, { resetForm }) => {
-            axios.get(`https://syedmomin-server.cyclic.app/user/${values.email}`)
-                // axios.get(`http://localhost:5001/user/${values.email}`)
+            // axios.get(`https://syedmomin-server.cyclic.app/user/${values.email}`)
+            axios.get(`http://localhost:5001/user/${values.email}`)
                 .then(res => {
                     console.log(res.data.exists)
                     if (res.data.exists) {
@@ -78,8 +78,8 @@ function Login() {
                         })
                         // console.log(`User with email ${values.email} exists`);
                     } else {
-                        axios.post(`https://syedmomin-server.cyclic.app/registration`, {
-                            // axios.post(`http://localhost:5001/registration`, {
+                        // axios.post(`https://syedmomin-server.cyclic.app/registration`, {
+                        axios.post(`http://localhost:5001/registration`, {
                             userName: values.userName,
                             email: values.email,
                             number: values.number,
@@ -107,9 +107,6 @@ function Login() {
                 });
         },
     });
-    //   useEffect(() => {
-    //         // autoFun()
-    //     }, []);
 
     return (
         <>
@@ -119,7 +116,7 @@ function Login() {
             </div>
             {!SignupForm &&
                 <form>
-                    <h3>Login DanySAM</h3>
+                    <h3>Login - DanySAM</h3>
 
                     <label>Username :</label>
                     <input type="text" placeholder="Email" />
@@ -133,7 +130,7 @@ function Login() {
             }
             {SignupForm &&
                 <form onSubmit={registerForm.handleSubmit}>
-                    <h3>Registration DanySAM</h3>
+                    <h3>Registration - DanySAM</h3>
 
                     <label>Username :</label>
                     <input
