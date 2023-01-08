@@ -116,7 +116,7 @@ function Login() {
                         password: yup.string().required('Password is required'),
                     })}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        axios.post(`https://syedmomin-server.cyclic.app/login`, {
+                        axios.post(`https://syedmomin-server.cyclic.app/login`, {   
                         // axios.post(`http://localhost:5001/login`, {
                             
                             email: values.email,
@@ -135,9 +135,9 @@ function Login() {
                                 setresponseModal({
                                     responseState: true,
                                     responseStatus: "danger",
-                                    responseMessage: err.response.data.error
+                                    responseMessage: err.response.data.message
                                 })
-                                // console.log("sdsds", err.response.data.error)
+                                console.log("sdsds", err.response.data.message)
                             })
                         setSubmitting(false);
                         console.log("dffdf", values)
