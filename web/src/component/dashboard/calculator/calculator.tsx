@@ -1,5 +1,7 @@
 
 import React, { useState } from 'react';
+import { Card, InputGroup, Form, Button } from 'react-bootstrap';
+import './calculator.css';
 
 function Calculator() {
 
@@ -17,7 +19,7 @@ function Calculator() {
     // Main Function 
 
     const setcalu = (val: any) => {
-        console.log("cehck",val.value)
+        console.log("cehck", val.value)
         if (val.value === "=") {
             finalResult();
         } else if (val.value === "C") {
@@ -55,24 +57,50 @@ function Calculator() {
         setresult(str);
     }
     return (
-        <div className="calculator">
-            <p>{chkMessge}</p>
-            <input type="text" placeholder="0" value={result} className="resultField" />
-            <div className="buttonBox">
-                {
-                    btnValues.flat().map((val, i) => {
-                        return (
-                            <button
-                                key={i}
-                                className={val === "=" || val === "C" || val === "D" ? "mainButton" : "subButton"}
-                                value={val}
-                                onClick={(e) => setcalu(e.target)}
-                            >{val}</button>
-                        );
-                    })
-                }
+        <>
+            <div className="d-flex justify-content-center m-3">
+                <Card
+                    bg="Light"
+                    key="Light"
+                    text="dark"
+                    style={{ width: '18rem' }}
+                    className="shadow mb-5 bg-white rounded"
+                >
+                    <Card.Header>{chkMessge}</Card.Header>
+                    <Card.Body>
+                        <Card.Title>
+                            <InputGroup size="lg">
+                                <InputGroup.Text id="inputGroup-sizing-default">
+                                    🎰
+                                </InputGroup.Text>
+                                <Form.Control
+                                    aria-label="Default"
+                                    aria-describedby="inputGroup-sizing-default"
+                                    value={result}
+                                />
+                            </InputGroup>
+                        </Card.Title>
+                        <Card.Text>
+                            <div className="buttonBox">
+                                {
+                                    btnValues.flat().map((val, i) => {
+                                        return (
+                                            <Button
+                                                style={{ fontSize: '30px', border: 'none', fontWeight: 'bold', cursor: 'pointer', margin: '2px' }}
+                                                variant={val === "C" || val === "D" ? "danger" : "primary"}
+                                                key={i}
+                                                value={val}
+                                                onClick={(e) => setcalu(e.target)}
+                                            >{val}</Button>
+                                        );
+                                    })
+                                }
+                            </div>
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
             </div>
-        </div>
+        </>
     )
 }
 

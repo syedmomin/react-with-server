@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
-import { AlignCenter } from 'react-bootstrap-icons';
 
 function DigitalWatch() {
 
