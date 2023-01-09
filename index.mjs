@@ -4,9 +4,13 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken'
 import './model/login/login.mjs'
+import cookieParser from 'cookie-parser';
+import { stringToHash, varifyHash } from "bcrypt-inzi"
+
 
 const app = express()
 const port = process.env.PORT || 5001;
+const SECRET = process.env.SECRET || "topsecret";
 
 app.use(cors());
 app.use(express.json());
@@ -41,28 +45,10 @@ let userSchema = new mongoose.Schema({
 const userModel = mongoose.model('userDetail', userSchema);
 
 
-// jwt token  
-function createJWT(user) {
-    // Set the expiration time of the JWT
-    const expiresIn = '1h';
-
-    // Set the payload of the JWT (the data that will be encoded in the token)
-    const payload = {
-        sub: user, // The user's ID
-        iat: Date.now(), // The time the JWT was issued
-    };
-
-    // Sign the JWT and return it
-    return jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn
-    });
-}
-
 // user registration  
 app.post('/registration', (req, res) => {
 
     const body = req.body;
-
     if (
         !body.userName ||
         !body.email ||
@@ -74,59 +60,110 @@ app.post('/registration', (req, res) => {
         });
         return;
     }
+    stringToHash(body.password).then(hashString => {
 
-    userModel.create({
+        userModel.create({
             userName: body.userName,
-            email: body.email,
+            email: body.email.toLowerCase(),
             number: body.number,
             role: body.role,
-            password: body.password
+            password: hashString
         },
-        (err, saved) => {
-            if (!err) {
-                console.log(saved);
+            (err, result) => {
+                if (!err) {
+                    console.log(result);
 
-                res.send({
-                    status: "success",
-                    message: "User register successfully"
-                });
-            } else {
-                res.status(500).send({
-                    message: "server error"
-                })
-            }
-        })
-
+                    res.status(201).send({
+                        status: "success",
+                        message: "User is created successfully"
+                    });
+                } else {
+                    res.status(500).send({
+                        message: "server error"
+                    })
+                }
+            })
+    });
 })
 
 // login user api 
-app.post('/login', (req, res) => {
-    const {
-        username,
-        password
-    } = req.body;
+app.post("/login", (req, res) => {
 
-    // Query the database to check if the provided username and password are valid
-    userModel.findOne({
-        username,
-        password
-    }, (err, user) => {
-        if (err || !user) {
-            return res.status(401).send({
-                error: 'Invalid credentials'
-            });
-        }
+    let body = req.body;
+    body.email = body.email.toLowerCase();
 
-        // Generate a JSON Web Token and send it back to the client
-        //   const token = jwt.sign({ id: user.id }, JWT_SECRET);
-        //   res.json({ token });
-        res.send({
-            status: "success",
-            message: `welcome ${username} to dashboard`
-        });
-    });
-});
+    if (!body.email || !body.password) { // null check - undefined, "", 0 , false, null , NaN
+        res.status(400).send(
+            `required fields missing, request example: 
+                {
+                    "email": "abc@abc.com",
+                    "password": "12345"
+                }`
+        );
+        return;
+    }
 
+    // check if user exist
+    userModel.findOne(
+        { email: body.email },
+        "userName number email password",
+        (err, data) => {
+            if (!err) {
+                console.log("data: ", data);
+
+                if (data) { // user found
+                    varifyHash(body.password, data.password).then(isMatched => {
+
+                        console.log("isMatched: ", isMatched);
+
+                        if (isMatched) {
+
+                            const token = jwt.sign({
+                                _id: data._id,
+                                email: data.email,
+                                iat: Math.floor(Date.now() / 1000) - 30,
+                                exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24),
+                            }, SECRET);
+
+                            console.log("token: ", token);
+
+                            res.cookie('Token', token, {
+                                maxAge: 86_400_000,
+                                httpOnly: true,
+                                // sameSite: true,
+                                // secure: true
+                            });
+
+                            res.send({
+                                message: "login successful",
+                                profile: {
+                                    email: data.email,
+                                    userName: data.userName,
+                                    token: token,
+                                    number: data.number,
+                                    _id: data._id
+                                }
+                            });
+                            return;
+                        } else {
+                            console.log("password did not match");
+                            res.status(401).send({ message: "Password did not match" });
+                            return;
+                        }
+                    })
+
+                } else { // user not already exist
+                    console.log("user not found");
+                    res.status(401).send({ message: "This email not exist" });
+                    return;
+                }
+            } else {
+                console.log("db error: ", err);
+                res.status(500).send({ message: "login failed, please try later" });
+                return;
+            }
+        })
+})
 
 
 // get all user data in mangodb 
@@ -145,6 +182,8 @@ app.get('/getAllUser', (req, res) => {
     });
 
 });
+
+
 // app.get('/abc', (req, res) => {
 //     console.log("request ip: ", req.ip);
 //     res.send('Hello World! ' + new Date().toString());
