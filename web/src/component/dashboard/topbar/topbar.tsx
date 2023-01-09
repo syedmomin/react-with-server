@@ -1,13 +1,10 @@
-import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
 import './topbar.css'
 
-function TopBarHeader() {
+function TopBarHeader(props:any) {
 
     const links = [
-        { text: 'Home', url: '/' },
-        { text: 'About', url: '/about' },
-        { text: 'Contact', url: '/contact' }
+        { text: props.text, url: props.url },
     ];
     return (
         <>
