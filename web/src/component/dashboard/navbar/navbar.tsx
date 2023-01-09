@@ -1,11 +1,24 @@
-import { Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Github, Linkedin, Facebook } from 'react-bootstrap-icons';
 import { Link } from 'react-router-dom';
 
 function MainNavbar() {
   const pages = [
     {
-      path: '/',
-      label: 'Home'
+      path: '/watch',
+      label: 'Watch'
+    },
+    {
+      path: '/calculator',
+      label: 'Calculator'
+    },
+    {
+      path: '/todo',
+      label: 'Todo'
+    },
+    {
+      path: '/game',
+      label: 'Games'
     },
     {
       path: '/about',
@@ -14,19 +27,36 @@ function MainNavbar() {
   ];
 
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="/">My App</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <ul className="navbar-nav mr-auto">
-          {pages.map(page => (
-            <li key={page.path} className="nav-item">
-              <Link to={page.path} className="nav-link">{page.label}</Link>
-            </li>
-          ))}
-        </ul>
-      </Navbar.Collapse>
-    </Navbar>
+    <>
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Container>
+          <Link to="/"><Navbar.Brand>DanySAM</Navbar.Brand></Link>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="me-auto">
+              <ul className="navbar-nav mr-auto">
+                {pages.map(page => (
+                  <li key={page.path} className="nav-item">
+                    <Link to={page.path} className="nav-link">{page.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </Nav>
+            <Nav>
+              <Nav.Link>
+                <Github />
+              </Nav.Link>
+              <Nav.Link>
+                <Linkedin />
+              </Nav.Link>
+              <Nav.Link>
+                <Facebook />
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </>
   );
 }
 

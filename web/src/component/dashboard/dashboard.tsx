@@ -1,34 +1,23 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import TopBarHeader from "./topbar/topbar";
 import GameCards from "./gamecards/gamecards";
-import Crossword from "./crossword/crossword";
 import MainNavbar from "./navbar/navbar";
+import DigitalWatch from "./digitalwatch/digitalwatch";
+import Calculator from "./calculator/calculator";
+
+
 function Dashboard() {
-    const mainMenu = [
-        {
-            text: "CrossWords",
-            url: "crossword",
-            component: <Crossword />
-        },
-    ];
     return (
         <>
             <Router>
-                {/* {mainMenu.map(mainMenu => (
-                    <TopBarHeader
-
-                     text={mainMenu.text} url={mainMenu.url}
-                     
-                     />
-                ))} */}
+                <MainNavbar />
                 <div className="container">
-                    <Routes>
-                        <GameCards />
-                    </Routes>
+                <Routes>
+                    <Route path="/" element={<GameCards />} />
+                    <Route path="/watch" element={<DigitalWatch />} />
+                    <Route path="/calculator" element={<Calculator />} />
+                </Routes>
                 </div>
             </Router>
-            {/* <Route path={mainMenu.url} element={mainMenu.component} /> */}
-            {/* <MainNavbar/> */}
         </>
     )
 
