@@ -19,7 +19,7 @@ function Calculator() {
     // Main Function 
 
     const setcalu = (val: any) => {
-        console.log("cehck", val.value)
+        // console.log("cehck", val.value)
         if (val.value === "=") {
             finalResult();
         } else if (val.value === "C") {

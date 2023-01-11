@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken'
 import './model/login/login.mjs'
 import cookieParser from 'cookie-parser';
 import { stringToHash, varifyHash } from "bcrypt-inzi"
-
+import userRoute from './routes/login.mjs';
 
 const app = express()
 const port = process.env.PORT || 5001;
