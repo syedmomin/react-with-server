@@ -1,16 +1,24 @@
+import { Card } from "react-bootstrap"
+import GernateCard from "./eidt&CreateCard/gernatecards"
+
+
 function GameCards() {
 
     return (
         <>
             <h1 className="mt-4">Simple Sidebar</h1>
-            <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-            <p>
-                Make sure to keep all page content within the
-                <code>#page-content-wrapper</code>
-                . The top navbar is optional, and just for demonstration. Just create an element with the
-                <code>#sidebarToggle</code>
-                ID which will toggle the menu when clicked.
-            </p>
+            <Card className="bg-dark text-white">
+                <Card.Img src="not yet" alt="Card image" />
+                <Card.ImgOverlay>
+                    <Card.Title>Card title</Card.Title>
+                    <Card.Text>
+                        This is a wider card with supporting text below as a natural lead-in
+                        to additional content. This content is a little bit longer.
+                    </Card.Text>
+                    <Card.Text>Last updated 3 mins ago</Card.Text>
+                </Card.ImgOverlay>
+            </Card>
+            <GernateCard/>
         </>
     )
 }
