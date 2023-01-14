@@ -24,6 +24,6 @@ let userSchema = new mongoose.Schema({
     }
 });
 
-const userMessage = mongoose.model('userDetail', userSchema);
+const userModal = mongoose.model('userDetail', userSchema);
 
-export default userMessage;
+export default userModal;
