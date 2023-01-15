@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import './App.css';
 import Login from './component/login/login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Dashboard from './component/dashboard/dashboard';
-import ContextProvider from './context/context';
+import ContextProvider, { GlobalContext } from './context/context';
 function App() {
 
-  const [isAuth, setIsAuth] = useState(false);
+  const { state } = useContext(GlobalContext);
 
   return (
 
     <>
       <ContextProvider>
-        {isAuth ?
+        {state.isLogin ?
           <Dashboard />
           :
           <Login />
