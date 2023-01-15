@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ResponseModal from '../modal/responseModal';
 import { useFormik, Formik, Field, Form, ErrorMessage } from 'formik';
+import { GlobalContext } from './../../context/context';
 import * as yup from 'yup';
 import axios from 'axios';
 import './login.css';
 
 function Login() {
+    const { state, dispatch } = useContext(GlobalContext);
+console.log("context api",state)
     const [SignupForm, setSignupForm] = useState(false);
     const [responseModal, setresponseModal] =
         useState({
@@ -60,8 +63,8 @@ function Login() {
                     .max(25, "please enter within 25 characters "),
             }),
         onSubmit: (values, { resetForm }) => {
-            axios.get(`https://syedmomin-server.cyclic.app/user/${values.email}`)
-                // axios.get(`http://localhost:5001/user/${values.email}`)
+            // axios.get(`https://syedmomin-server.cyclic.app/user/${values.email}`)
+                axios.get(`${state.baseUrl}/user/emailExist/${values.email}`)
                 .then(res => {
                     console.log(res.data.exists)
                     if (res.data.exists) {
@@ -72,8 +75,7 @@ function Login() {
                         })
                         // console.log(`User with email ${values.email} exists`);
                     } else {
-                        axios.post(`https://syedmomin-server.cyclic.app/registration`, {
-                            // axios.post(`http://localhost:5001/registration`, {
+                            axios.post(`${state.baseUrl}/user/create`, {
                             userName: values.userName,
                             email: values.email,
                             number: values.number,
@@ -116,9 +118,7 @@ function Login() {
                         password: yup.string().required('Password is required'),
                     })}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                        axios.post(`https://syedmomin-server.cyclic.app/login`, {   
-                        // axios.post(`http://localhost:5001/login`, {
-                            
+                            axios.post(`${state.baseUrl}/user/login`, {
                             email: values.email,
                             password: values.password
                         })
@@ -140,7 +140,6 @@ function Login() {
                                 console.log("sdsds", err.response.data.message)
                             })
                         setSubmitting(false);
-                        console.log("dffdf", values)
                         // Send a request to your API with the form values
                     }}
                 >

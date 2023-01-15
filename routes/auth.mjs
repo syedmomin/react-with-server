@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.post('/user/create', createUser);
 router.get('/user/getAll', getAllUser);
-router.get('/user/emailExist:email', emailExist);
-router.delete('/user/login', loginUser);
+router.get('/user/emailExist/:email', emailExist);
+router.post('/user/login', loginUser);
 // router.patch('/user/update:id', updateUser);
 
 
