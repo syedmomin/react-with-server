@@ -8,7 +8,6 @@ import './login.css';
 
 function Login() {
     const { state, dispatch } = useContext(GlobalContext);
-console.log("context api",state)
     const [SignupForm, setSignupForm] = useState(false);
     const [responseModal, setresponseModal] =
         useState({
@@ -64,7 +63,7 @@ console.log("context api",state)
             }),
         onSubmit: (values, { resetForm }) => {
             // axios.get(`https://syedmomin-server.cyclic.app/user/${values.email}`)
-                axios.get(`${state.baseUrl}/user/emailExist/${values.email}`)
+            axios.get(`${state.baseUrl}/user/emailExist/${values.email}`)
                 .then(res => {
                     console.log(res.data.exists)
                     if (res.data.exists) {
@@ -75,7 +74,7 @@ console.log("context api",state)
                         })
                         // console.log(`User with email ${values.email} exists`);
                     } else {
-                            axios.post(`${state.baseUrl}/user/create`, {
+                        axios.post(`${state.baseUrl}/user/create`, {
                             userName: values.userName,
                             email: values.email,
                             number: values.number,
@@ -103,9 +102,17 @@ console.log("context api",state)
                 });
         },
     });
+    function newchanges() {
+        dispatch({
+            type: 'USER_LOGIN',
+            payload: { user: 'momin', sam: 'flop', rant: 'trol' }
+        })
+        console.log("del",state.isLogin)
+    }
 
     return (
         <>
+            <button onClick={newchanges}>check</button>
             <div className="background">
                 <div className="shape"></div>
                 <div className="shape"></div>
@@ -118,7 +125,7 @@ console.log("context api",state)
                         password: yup.string().required('Password is required'),
                     })}
                     onSubmit={(values, { setSubmitting, resetForm }) => {
-                            axios.post(`${state.baseUrl}/user/login`, {
+                        axios.post(`${state.baseUrl}/user/login`, {
                             email: values.email,
                             password: values.password
                         })

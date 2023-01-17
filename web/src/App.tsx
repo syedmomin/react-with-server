@@ -7,24 +7,17 @@ import ContextProvider, { GlobalContext } from './context/context';
 function App() {
 
   const { state } = useContext(GlobalContext);
-
+console.log("check data",state.isLogin)
   return (
 
     <>
-      <ContextProvider>
+      <ContextProvider >
         {state.isLogin ?
           <Dashboard />
           :
           <Login />
         }
       </ContextProvider>
-      {/* <AuthContext.Provider value={{ user: null, isAuthenticated: isAuth }}>
-        {isAuth ?
-          <Dashboard />
-          :
-          <Login />
-        }
-      </AuthContext.Provider> */}
     </>
   );
 }
