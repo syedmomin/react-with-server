@@ -103,7 +103,7 @@ export const loginUser = async  (req, res) => {
     // check if user exist
     userModel.findOne(
         { email: body.email },
-        "userName number email password",
+        "userName role email password",
         (err, data) => {
             if (!err) {
                 console.log("data: ", data);
@@ -111,7 +111,7 @@ export const loginUser = async  (req, res) => {
                 if (data) { // user found
                     varifyHash(body.password, data.password).then(isMatched => {
 
-                        console.log("isMatched: ", isMatched);
+                        // console.log("isMatched: ", isMatched);
 
                         if (isMatched) {
 
@@ -137,7 +137,7 @@ export const loginUser = async  (req, res) => {
                                     email: data.email,
                                     userName: data.userName,
                                     token: token,
-                                    number: data.number,
+                                    role: data.role,
                                     _id: data._id
                                 }
                             });

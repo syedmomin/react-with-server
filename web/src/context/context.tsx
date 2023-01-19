@@ -9,7 +9,7 @@ interface ContextProviderProps {
   children: React.ReactNode;
 }
 
-export const reducer = (state: any, action: any) => {
+const reducer = (state: any, action: any) => {
   switch (action.type) {
 
     case "USER_LOGIN": {

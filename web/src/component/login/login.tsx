@@ -102,17 +102,10 @@ export default function Login() {
                 });
         },
     });
-    function newchanges() {
-        dispatch({
-            type: 'USER_LOGIN',
-            payload: { user: 'momin', sam: 'flop', rant: 'trol' }
-        })
-    }
 
     return (
         <>
             <div className="loginPage">
-                <button onClick={newchanges}>check</button>
                 <div className="background">
                     <div className="shape"></div>
                     <div className="shape"></div>
@@ -130,6 +123,10 @@ export default function Login() {
                                 password: values.password
                             })
                                 .then(response => {
+                                    dispatch({
+                                        type: 'USER_LOGIN',
+                                        payload: response.data.profile
+                                    })
                                     console.log(response.data)
                                     setresponseModal({
                                         responseState: true,
